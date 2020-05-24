@@ -1,0 +1,66 @@
+<span>
+    189. 旋转数组
+    给定一个数组，将数组中的元素向右移动 k 个位置，其中 k 是非负数。
+    
+    示例 1:
+    
+    输入: [1,2,3,4,5,6,7] 和 k = 3
+    输出: [5,6,7,1,2,3,4]
+    解释:
+    向右旋转 1 步: [7,1,2,3,4,5,6]
+    向右旋转 2 步: [6,7,1,2,3,4,5]
+    向右旋转 3 步: [5,6,7,1,2,3,4]
+    示例 2:
+    
+    输入: [-1,-100,3,99] 和 k = 2
+    输出: [3,99,-1,-100]
+    解释: 
+    向右旋转 1 步: [99,-1,-100,3]
+    向右旋转 2 步: [3,99,-1,-100]
+    说明:
+    
+    尽可能想出更多的解决方案，至少有三种不同的方法可以解决这个问题。
+    要求使用空间复杂度为 O(1) 的 原地 算法。
+</span>
+<span>
+  两种解法：
+  一、暴力求解，向右移动一次比较容易实现，如果要移动k个位置，那就重复k次即可。
+    需要注意的一点是循环第一个位置0的节点要被nums.length - 1的节点替换，所以先取curr = nums[nums.length - 1]
+  二、直接将节点放到最终位置，如果0位则放到(0+k)%nums.length处，然后将(0+k)%nums.length处的元素放到对应的位置(0+k+k)%nums.length。
+    但是有一个问题，如果循环一次有可能部分节点没有被移动，比nums长度为4，k=2，那么只递归一次，则有一半的元素不能被移动。
+    可以移动k次，从0-k，每次都是递归移动.
+</span>
+<script>
+
+  var rotate = function(nums, k) {
+    for(let i = 0; i < k; i++){
+        let curr = nums[nums.length-1]
+        for(let j = 0; j < nums.length; j++){
+            temp = nums[j]
+            nums[j] = curr
+            curr = temp
+        }
+        nums[0] = curr
+    }
+    return nums
+};
+
+var rotate = function(nums, k) {
+    k = k % nums.length
+    let count = 0
+    for(let start = 0; count < nums.length; start++){
+        let curr = nums[start]
+        for ( let i = start;;){
+            i = (i + k ) % nums.length
+            let temp = nums[i]
+            nums[i] = curr
+            curr = temp
+            count = count + 1
+            if ( i === start) {
+                break
+            }
+        }
+    }
+    return nums
+};
+</script>

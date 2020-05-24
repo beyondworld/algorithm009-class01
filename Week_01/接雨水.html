@@ -1,0 +1,106 @@
+<span>
+  42. 接雨水
+  给定 n 个非负整数表示每个宽度为 1 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。
+  上面是由数组 [0,1,0,2,1,0,1,3,2,1,2,1] 表示的高度图，在这种情况下，可以接 6 个单位的雨水（蓝色部分表示雨水）。 感谢 Marcos 贡献此图。
+  示例:
+  输入: [0,1,0,2,1,0,1,3,2,1,2,1]
+  输出: 6
+</span>
+<span>
+  堆栈解法
+  一、从左往右入栈，如果碰到比栈顶小的元素则入栈。如果碰到比栈顶元素大的则出栈，计算当前堆栈最大值和当前元素的高度差，这就是该长方体乘放的水。
+  当第一轮结束后，堆栈中是从大到小的排列，然后从右向左再遍历一遍。
+  二、从左往右入栈，一遍遍历。当比栈顶元素小时入栈，当比栈顶元素大时，找到比栈顶靠左的元素left，left肯定比栈顶大，但是不一定比当前元素大，
+  则这之间盛放大水=(curr-left-1)*(min(curr,left)- top)
+</span>
+<scirpt>
+/**
+* @param {number[]} height
+* @return {number}
+*/
+var trap = function(height) {
+    let pp = Array()
+    let curr = 0
+    let water = 0
+    for(let i = 0; i < height.length; i++){
+        if (pp.length === 0){
+            pp.push(height[i])
+            curr = height[i]
+            continue
+        }
+
+        if( height[i] >= curr){
+            for(;1;){
+                if (pp.length === 0){
+                    break
+                }
+                let temp = pp.pop()
+                water = water + (curr - temp)
+            }
+            pp.push(height[i])
+            curr = height[i]
+        } else {
+            pp.push(height[i])
+        }
+    }
+    if (pp.length > 0){
+        curr = pp.pop()
+        let length = pp.length
+        for(let i = 0; i < length; i++){
+            temp = pp.pop()
+            if (temp < curr){
+                water = water + (curr - temp)
+            } else {
+                curr = temp
+            }
+        }
+    }
+    return water
+};
+
+/**
+ * @param {number[]} height
+ * @return {number}
+ */
+var trap = function(height) {
+    let pp = Array()
+    let water = 0
+    let top = 0
+    for (let i = 0; i < height.length; i++){
+        if(pp.length === 0){
+            pp.push(i)
+            continue
+        }
+
+        top = pp[pp.length-1]
+        if (height[i] < height[top]) {
+            pp.push(i)
+            continue
+        } 
+
+        top = pp.pop()
+        if(height[i] >= height[top]){
+            for(;1;) {
+                if(top !== undefined ){
+                    if (height[i] >= height[top]){
+                        let left = pp[pp.length - 1]
+                        if ( left === undefined){
+                            break
+                        }
+                        let distance = i - left - 1
+                        hight = height[i] > height[left] ? (height[left] - height[top]) : (height[i] - height[top]);
+                        water = water + distance * hight
+                        top = pp.pop()
+                    } else {
+                        pp.push(top)
+                        break
+                    }
+                }
+            }
+            pp.push(i)
+            continue
+        }
+    }
+    return water
+};
+</scirpt>

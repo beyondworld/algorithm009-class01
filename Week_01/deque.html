@@ -1,0 +1,96 @@
+<h1>Deque(双端队列)</h1>
+<script>
+  var localDeque = Array()
+  var initSize = 10
+  var extendSize = 10
+  var headIndex = 0
+  var tailIndex = 1
+
+  function NewDeque() {
+    localDeque = Array()
+    for(let i = 0; i < initSize; i++){
+      localDeque[i] = null
+    }
+  }
+
+  function extendDeque() {
+    console.log('extend',headIndex,tailIndex)
+    var newDeque = Array()
+    tailIndex = localDeque.length
+    for(let i = 0; i < localDeque.length + extendSize; i++){
+      newDeque[i] = null
+    }
+    for(let i = 0; i < localDeque.length; i++){
+      newDeque[i] = localDeque[headIndex]
+      console.log(headIndex,newDeque[i])
+      headIndex = (headIndex + 1) % localDeque.length
+    }
+    headIndex = 0
+    localDeque = newDeque
+  }
+
+  function isFull() {
+    if (headIndex === tailIndex) {
+      return true
+    }
+    return false
+  }
+
+  function isEmpty() {
+    if ((headIndex +1 + 2*localDeque.length) % localDeque.length === tailIndex) {
+      return true
+    }
+    return false
+  }
+
+  function AddFirst(data) {
+    if(isFull()){
+      extendDeque()
+    }
+    localDeque[headIndex] = data
+    headIndex = (headIndex - 1 + 2*localDeque.length) % localDeque.length
+  }
+
+  function AddLast(data) {
+    if(isFull()){
+      extendDeque()
+    }
+    localDeque[tailIndex] = data
+    tailIndex = (tailIndex + 1) % localDeque.length
+  }
+
+  function RemoveFirst() {
+    if(isEmpty()){
+      return false
+    }
+    res = localDeque[headIndex = (headIndex + 1 )%localDeque.length]
+    localDeque[headIndex] = null
+    return res
+  }
+
+  function RemoveLast() {
+    if(isEmpty()){
+      return false
+    }
+    res = localDeque[tailIndex = (tailIndex - 1 + 2*localDeque.length) % localDeque.length]
+    localDeque[tailIndex] = null
+    return res
+  }
+
+  function Test(){
+    NewDeque()
+    for(let i = 0; i < 10; i++){
+      AddFirst(i)
+    }
+    for(let i = 0; i < 10; i++){
+      RemoveFirst()
+    }
+    for(let i = 0; i < 10; i++){
+      AddLast(i)
+    }
+    for(let i = 0; i < 10; i++){
+      RemoveLast()
+    }
+    return localDeque
+  }
+</script>

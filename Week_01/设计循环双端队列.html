@@ -1,0 +1,154 @@
+<span>
+    641. 设计循环双端队列
+    设计实现双端队列。
+    你的实现需要支持以下操作：
+    
+    MyCircularDeque(k)：构造函数,双端队列的大小为k。
+    insertFront()：将一个元素添加到双端队列头部。 如果操作成功返回 true。
+    insertLast()：将一个元素添加到双端队列尾部。如果操作成功返回 true。
+    deleteFront()：从双端队列头部删除一个元素。 如果操作成功返回 true。
+    deleteLast()：从双端队列尾部删除一个元素。如果操作成功返回 true。
+    getFront()：从双端队列头部获得一个元素。如果双端队列为空，返回 -1。
+    getRear()：获得双端队列的最后一个元素。 如果双端队列为空，返回 -1。
+    isEmpty()：检查双端队列是否为空。
+    isFull()：检查双端队列是否满了。
+    示例：
+    
+    MyCircularDeque circularDeque = new MycircularDeque(3); // 设置容量大小为3
+    circularDeque.insertLast(1);			        // 返回 true
+    circularDeque.insertLast(2);			        // 返回 true
+    circularDeque.insertFront(3);			        // 返回 true
+    circularDeque.insertFront(4);			        // 已经满了，返回 false
+    circularDeque.getRear();  				        // 返回 2
+    circularDeque.isFull();				            // 返回 true
+    circularDeque.deleteLast();			          // 返回 true
+    circularDeque.insertFront(4);			        // 返回 true
+    circularDeque.getFront();				          // 返回 4
+</span>
+<script>
+var localDeque = undefined
+var headIndex = 0
+var tailIndex = 1
+
+var MyCircularDeque = function(k) {
+    localDeque = new Array()
+    for(let i = 0; i < k + 1; i++){
+      localDeque[i] = null
+    }
+    headIndex = 0
+    tailIndex = 1
+};
+
+/**
+ * Adds an item at the front of Deque. Return true if the operation is successful. 
+ * @param {number} value
+ * @return {boolean}
+ */
+MyCircularDeque.prototype.insertFront = function(value) {
+    if(MyCircularDeque.prototype.isFull()){
+        return false
+    }
+    localDeque[headIndex] = value
+    headIndex = (headIndex - 1 + 2*localDeque.length) % localDeque.length
+    return true
+};
+
+/**
+ * Adds an item at the rear of Deque. Return true if the operation is successful. 
+ * @param {number} value
+ * @return {boolean}
+ */
+MyCircularDeque.prototype.insertLast = function(value) {
+    if(MyCircularDeque.prototype.isFull()){
+        return false
+    }
+    localDeque[tailIndex] = value
+    tailIndex = (tailIndex + 1) % localDeque.length
+    return true
+};
+
+/**
+ * Deletes an item from the front of Deque. Return true if the operation is successful.
+ * @return {boolean}
+ */
+MyCircularDeque.prototype.deleteFront = function() {
+    if(MyCircularDeque.prototype.isEmpty()){
+        return false
+    }
+    res = localDeque[headIndex = (headIndex + 1 )%localDeque.length]
+    localDeque[headIndex] = null
+    return true
+};
+
+/**
+ * Deletes an item from the rear of Deque. Return true if the operation is successful.
+ * @return {boolean}
+ */
+MyCircularDeque.prototype.deleteLast = function() {
+    if(MyCircularDeque.prototype.isEmpty()){
+        return false
+    }
+    res = localDeque[tailIndex = (tailIndex - 1 + 2*localDeque.length) % localDeque.length]
+    localDeque[tailIndex] = null
+    return true
+};
+
+/**
+ * Get the front item from the deque.
+ * @return {number}
+ */
+MyCircularDeque.prototype.getFront = function() {
+    if(MyCircularDeque.prototype.isEmpty()){
+        return -1
+    }
+    tempIndex = (headIndex + 1 + 2*localDeque.length) % localDeque.length
+    return localDeque[tempIndex]
+};
+
+/**
+ * Get the last item from the deque.
+ * @return {number}
+ */
+MyCircularDeque.prototype.getRear = function() {
+    if(MyCircularDeque.prototype.isEmpty()){
+        return -1
+    }
+    tempIndex = (tailIndex - 1 + 2*localDeque.length) % localDeque.length
+    return localDeque[tempIndex]
+};
+
+/**
+ * Checks whether the circular deque is empty or not.
+ * @return {boolean}
+ */
+MyCircularDeque.prototype.isEmpty = function() {
+    if ((headIndex +1 + 2*localDeque.length) % localDeque.length === tailIndex) {
+      return true
+    }
+    return false
+};
+
+/**
+ * Checks whether the circular deque is full or not.
+ * @return {boolean}
+ */
+MyCircularDeque.prototype.isFull = function() {
+    if (headIndex === tailIndex) {
+      return true
+    }
+    return false
+};
+
+var obj = new MyCircularDeque(4)
+console.log(obj.insertFront([9]),localDeque)
+console.log(obj.deleteLast(),localDeque)
+console.log(obj.getRear(),localDeque)
+console.log(obj.getFront(),localDeque)
+console.log(obj.getFront(),localDeque)
+console.log(obj.deleteFront(),localDeque)
+console.log(obj.insertFront([6]),localDeque)
+console.log(obj.insertLast([5]),localDeque)
+console.log(obj.insertFront([9]),localDeque)
+console.log(obj.getFront(),localDeque)
+console.log(obj.insertFront([6]),localDeque)
+</script>
